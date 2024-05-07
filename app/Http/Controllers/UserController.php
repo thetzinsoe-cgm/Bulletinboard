@@ -27,7 +27,7 @@ class UserController extends Controller
     /**
      * Show user list
      *
-     * @return \Illuminate\Http\Response
+     * @return view user create
      */
     public function index()
     {
@@ -38,7 +38,7 @@ class UserController extends Controller
     /**
      * Show user list
      *
-     * @return \Illuminate\Http\Response
+     * @return view user list
      */
     public function userList()
     {
@@ -49,7 +49,7 @@ class UserController extends Controller
     /**
      * Create user
      *
-     * @return \Illuminate\Http\Response
+     * @return view create user
      */
     public function createUser()
     {
@@ -94,6 +94,7 @@ class UserController extends Controller
             'password',
             'name',
             'image',
+            'role',
         ]), $id);
         return redirect()->route('user#list');
     }
@@ -108,5 +109,14 @@ class UserController extends Controller
     {
         $this->userService->deleteUserById($id);
         return redirect()->back();
+    }
+
+    /**
+     * Login user
+     * @return view login user
+     */
+    public function loginUser()
+    {
+        return view('user.loginUser');
     }
 }

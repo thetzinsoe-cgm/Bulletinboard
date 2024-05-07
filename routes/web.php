@@ -11,4 +11,5 @@ Route::prefix('user')->group(function () {
     Route::get('/detail/{id}',[UserController::class,'detailUser'])->name('user#detail');
     Route::post('/update/{id}',[UserController::class,'updateUser'])->name('user#update');
     Route::delete('/delete/{id}',[UserController::class,'deleteUser'])->name('user#delete');
+    Route::get('/login',[UserController::class,'loginUser'])->name('user#login');
 });
