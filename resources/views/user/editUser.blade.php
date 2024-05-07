@@ -25,25 +25,29 @@
 <body class="bg-gradient-primary">
 
     <div class="container">
-
         <div class="card o-hidden border-0 shadow-lg my-5">
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
+      <a href="{{route('user#list')}}" class=" btn btn-info">Back</a>
                 <div class="row">
-                  <div class="col-lg-5 text-center d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('img/default.png') }}" height="300px" alt="">
-                </div>
+                    <div class="col-lg-5 text-center d-flex align-items-center justify-content-center">
+
+                        @isset($user->img)
+                            <img src="{{asset('storage/images/'.$user->img)}} " height="300px" alt="">
+                        @endisset
+                    </div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Update Account!</h1>
                             </div>
-                            <form class="user" action="{{ route('store#user') }}" method="POST" enctype="multipart/form-data">
+                            <form class="user" action="{{ route('user#update',$user->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                         <input type="text" name="name" class="form-control form-control-user" id="exampleFirstName"
-                                        @if($user!=null) value={{$user->name}} @endif
+                                       value="{{$user->name}}"
                                             placeholder="Name">
+                                            {{-- <input type="text" class="form-control form-control-user"  id="exampleFirstName" name="name" value="{{$user->name}}" placeholder="Name"> --}}
                                 </div>
                                 <div class="form-group">
                                     <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail"
@@ -61,7 +65,7 @@
                                 </div>
 
                                   <input type="submit" class="btn btn-primary btn-user btn-block"
-                                  value = "Regiser Account">
+                                  value = "Update Account">
                             </form>
                                 <hr>
                                 <a href="#" class="btn btn-google btn-user btn-block">
@@ -83,7 +87,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript-->

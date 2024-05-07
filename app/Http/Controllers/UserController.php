@@ -79,7 +79,7 @@ class UserController extends Controller
     public function detailUser(Request $request,$id)
     {
         $user = $this->userService->getUserById($id);
-        return view('user.createUser',compact('user'));
+        return view('user.editUser',compact('user'));
     }
 
      /**
@@ -87,9 +87,15 @@ class UserController extends Controller
      *
      * @return view
      */
-    public function updateUser()
+    public function updateUser(Request $request,$id)
     {
-        return view('user.createUser');
+        $this->userService->updateUser($request->only([
+            'email',
+            'password',
+            'name',
+            'image',
+        ]), $id);
+        return redirect()->route('user#list');
     }
 
      /**
