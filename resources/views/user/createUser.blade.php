@@ -36,7 +36,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user" action="{{ route('store#user') }}" method="POST">
+                            <form class="user" action="{{ route('store#user') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                         <input type="text" name="name" class="form-control form-control-user" id="exampleFirstName"
@@ -53,9 +53,9 @@
                                         @if($user!=null) value={{$user->password}} @endif
                                             id="exampleInputPassword" placeholder="Password">
                                 </div>
+
                                 <div class="form-group">
-                                    <input type="file" name="image" class="form-control form-control-user" id="exampleFirstName"
-                                        placeholder="Upload you photo">
+                                    <input type="file" name="image" class="form-control form-control-user" id="exampleFirstName">
                                 </div>
 
                                 <input type="submit" class="btn btn-primary btn-user btn-block"

@@ -50,7 +50,7 @@
                     @foreach ($users as $user)
                     <tr>
                         <td>
-                            <img src="{{asset('img/undraw_posting_photo.svg')}} " height="100px" alt="">
+                            <img src="{{asset('storage/images/'.$user->img)}} " height="100px" alt="">
                         </td>
                         <td>{{$user->name}}</td>
                         <td>{{$user->email}}</td>
