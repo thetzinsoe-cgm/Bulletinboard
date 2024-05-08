@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Contracts\Services\UserServiceInterface;
-use App\Services\UserService;
 
 class UserController extends Controller
 {
@@ -48,7 +49,6 @@ class UserController extends Controller
 
     /**
      * Create user
-     *
      * @return view create user
      */
     public function createUser()
@@ -84,7 +84,6 @@ class UserController extends Controller
 
     /**
      * Update user
-     *
      * @return view
      */
     public function updateUser(Request $request, $id)
@@ -118,5 +117,75 @@ class UserController extends Controller
     public function loginUser()
     {
         return view('user.loginUser');
+    }
+
+    /**
+     * check login
+     * @param Request Data
+     * @return user
+     */
+    public function checkLogin(Request $request)
+    {
+        $credential = $request->only([
+            'email',
+            'password',
+        ]);
+        $user = $this->userService->checkLogin($credential);
+        if (Auth::attempt($credential)) {
+            if ($user->role == 1) {
+                return redirect()->route('user#list');
+            } else {
+                return view('post.postList');
+            }
+        }
+        return redirect()->back()->withErrors('Email address or password is incorrect');
+    }
+
+    /**
+     * change password
+     * @return view
+     */
+    public function changePassword()
+    {
+        return view('user.changePassword');
+    }
+
+    /**
+     * update password
+     * @return view
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = auth()->user();
+
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return redirect()->back()->with('error', 'The current password is incorrect.');
+        }
+
+        $userData = [
+            'email' => $user->email,
+            'password' => Hash::make($request->input('passwordConfirmation')), // Use 'password' for new password
+            'name' => $user->name,
+            'image' => $user->image,
+            'role' => $user->role
+        ];
+
+        $this->userService->updateUser($userData, $user->id); // Update the user
+
+        if ($user->role == 1) {
+            return redirect()->route('user#list')->with('success', 'Password updated successfully.'); // Redirect admin user
+        } else {
+            return redirect()->route('post.postList')->with('success', 'Password updated successfully.'); // Redirect regular user
+        }
+    }
+
+    /**
+     * to signout
+     * @return view
+     */
+    public function signOut()
+    {
+        Auth::logout();
+        return Redirect()->route('user#login');
     }
 }

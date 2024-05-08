@@ -41,4 +41,11 @@ interface UserDaoInterface
      * @return void
      */
     public function deleteUserById(int $id): void;
+
+    /**
+     * Login user by email and password
+     * @param Request data
+     * @return User
+     */
+    public function checkLogin($user):?object;
 }

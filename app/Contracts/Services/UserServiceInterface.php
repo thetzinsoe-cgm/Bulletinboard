@@ -41,4 +41,11 @@ interface UserServiceInterface
      * @return void
      */
     public function deleteUserById(int $id): void;
+
+    /**
+     * Login User By email and password
+     * @param Request data
+     * @return user
+     */
+    public function checkLogin($user):?object;
 }

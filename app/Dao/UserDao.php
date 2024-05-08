@@ -3,17 +3,12 @@
 namespace App\Dao;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Contracts\Dao\UserDaoInterface;
 use Illuminate\Support\Facades\Storage;
 
 class UserDao implements UserDaoInterface
 {
-     /**
-     * Key for password encrypt and decrypt
-     */
-    private $key = "bulletin";
-    private $iv ='boardboardboard1';
-
     /**
      * Get user list
      * @return object
@@ -37,14 +32,10 @@ class UserDao implements UserDaoInterface
             $image->storeAs('public/images', $imgName);
         }
 
-        $pass = $data['password'];
-        $encrypted = openssl_encrypt($pass, 'aes-256-cbc', $this->key, OPENSSL_RAW_DATA, $this->iv);
-        $encryptedData = base64_encode($encrypted);
-
         User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $encryptedData,
+            'password' => Hash::make($data['password']),
             'img' => $imgName,
             'role' => $data['role'] ?? 2,
             'created_at' => now(),
@@ -59,9 +50,6 @@ class UserDao implements UserDaoInterface
     public function getUserById($id): object
     {
         $user = User::findOrFail($id);
-        $encryptedPassword = $user->password;
-        $decryptedPassword = openssl_decrypt(base64_decode($encryptedPassword), 'aes-256-cbc', $this->key, OPENSSL_RAW_DATA, $this->iv);
-        $user->password = $decryptedPassword;
         return $user;
     }
 
@@ -84,14 +72,11 @@ class UserDao implements UserDaoInterface
             $imgName = $user->img;
         }
 
-        $pass = $data['password'];
-        $encrypted = openssl_encrypt($pass, 'aes-256-cbc', $this->key, OPENSSL_RAW_DATA, $this->iv);
-        $encryptedData = base64_encode($encrypted);
         $user = User::findOrFail($id);
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $encryptedData,
+            //'password' => Hash::make($data['password']),
             'img' => $imgName,
             'role' => $data['role'] ?? 2,
             'updated_at' => now(),
@@ -107,5 +92,20 @@ class UserDao implements UserDaoInterface
     {
         $user = User::findOrFail($id);
         $user->delete();
+    }
+
+    /**
+     * Login user by email and password
+     * @param Request data
+     * @return User
+     */
+    public function checkLogin($user): ?object
+    {
+        $email = $user['email'];
+        $foundUser = User::where('email', $email)->first();
+        if (!$foundUser) {
+            return null;
+        }
+        return $foundUser;
     }
 }

@@ -29,13 +29,6 @@
                                     @if ($user != null) value={{ $user->email }} @endif
                                     placeholder="Email Address">
                             </div>
-
-                            <div class="form-group">
-                                <input type="password" name="password" class="form-control form-control-user"
-                                    @if ($user != null) value={{ $user->password }} @endif
-                                    id="exampleInputPassword" placeholder="Password">
-                            </div>
-
                             <div class="form-group">
                                 <select class="custom-select" name="role" id="inputGroupSelect01">
                                     <option  selected disabled>Select Role</option>

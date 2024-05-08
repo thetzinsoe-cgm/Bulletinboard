@@ -1,10 +1,9 @@
 @extends('layout.master')
 @section('content')
     <div>
-        post title
+       <h1>This is post llist title</h1>
     </div>
     <div>
-        post description
+        <p>This is post list description</p>
     </div>
-
 @endsection

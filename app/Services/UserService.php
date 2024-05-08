@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
 use App\Contracts\Dao\UserDaoInterface;
 use App\Contracts\Services\UserServiceInterface;
 
@@ -73,5 +74,15 @@ class UserService implements UserServiceInterface
     public function deleteUserById(int $id): void
     {
         $this->userDao->deleteUserById($id);
+    }
+
+    /**
+     * Login user by email and password
+     * @param Request data
+     * @return user
+     */
+    public function checkLogin($user): ?object
+    {
+       return $this->userDao->checkLogin($user);
     }
 }

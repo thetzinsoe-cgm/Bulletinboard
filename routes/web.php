@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,4 +13,9 @@ Route::prefix('user')->group(function () {
     Route::post('/update/{id}',[UserController::class,'updateUser'])->name('user#update');
     Route::delete('/delete/{id}',[UserController::class,'deleteUser'])->name('user#delete');
     Route::get('/login',[UserController::class,'loginUser'])->name('user#login');
+    Route::post('/checkLogin',[UserController::class,'checkLogin'])->name('user#checkLogin');
+    Route::post('/logout',[UserController::class,'signOut'])->name('user#signOut');
+    Route::get('/changePassword',[UserController::class,'changePassword'])->name('user#changePassword');
+    Route::post('/updatePassword',[UserController::class,'updatePassword'])->name('user#updatePassword');
+    Route::post('/forgotPassword',[UserController::class,'forgotPassword'])->name('user#forgotPassword');
 });

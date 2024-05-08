@@ -9,10 +9,15 @@
                     </div>
                     <div class="">
                         <div class="p-5">
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Login!</h1>
                             </div>
-                            <form class="user" action="{{ route('store#user') }}" method="POST"
+                            <form class="user" action="{{ route('user#checkLogin') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -28,7 +33,7 @@
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="#">Forgot Password?</a>
+                                <a class="small" href="{{ route('user#forgotPassword') }}">Forgot Password?</a>
                             </div>
                             <div class="text-center">
                                 <a class="small mb-3" href="{{ route('user#create') }}">New user? Register!</a>
