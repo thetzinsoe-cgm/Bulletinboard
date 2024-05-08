@@ -28,8 +28,7 @@
                             </div>
 
                             <div class="form-group">
-                                <input type="file" name="image" class="form-control rounded" id="exampleFirstName"
-                                    required>
+                                <input type="file" name="image" class="form-control rounded" id="exampleFirstName">
                             </div>
 
                             <input type="submit" class="btn btn-primary btn-user btn-block" value = "Regiser Account">

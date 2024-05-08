@@ -1,7 +1,7 @@
 @extends('layout.master')
 @section('content')
     <div class="card-body col-10 m-auto">
-      <a href="{{route('user#create')}}" class="btn btn-info mb-2">Create User</a>
+        <a href="{{ route('user#create') }}" class="btn btn-info mb-2">Create User</a>
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -18,7 +18,11 @@
                     @foreach ($users as $user)
                         <tr>
                             <td>
-                                <img src="{{ asset('storage/images/' . $user->img) }} " height="100px" alt="">
+                                @if ($user->img)
+                                    <img src="{{ asset('storage/images/' . $user->img) }} " height="100px" alt="">
+                                @else
+                                    <img src="{{ asset('img/default.png') }} " height="100px" alt="">
+                                @endif
                             </td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
