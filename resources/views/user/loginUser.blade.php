@@ -9,14 +9,14 @@
                     </div>
                     <div class="">
                         <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Login!</h1>
+                            </div>
                             @if (session('error'))
                                 <div class="alert alert-danger">
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Login!</h1>
-                            </div>
                             <form class="user" action="{{ route('user#checkLogin') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf

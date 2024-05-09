@@ -63,6 +63,7 @@ class UserDao implements UserDaoInterface
     public function updateUser(array $data, $id): void
     {
         $imgName = '';
+        $user = User::findOrFail($id);
         if (isset($data['image']) && $data['image']->isValid()) {
             $image = $data['image'];
             $imgName = uniqid() . '_' . $image->getClientOriginalName();
@@ -72,11 +73,16 @@ class UserDao implements UserDaoInterface
             $imgName = $user->img;
         }
 
-        $user = User::findOrFail($id);
+        if(isset($data['password'])) {
+            $password = Hash::make($data['password']);
+        } else {
+            $password = $user->password;
+        }
+
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
-            //'password' => Hash::make($data['password']),
+            'password' => $password,
             'img' => $imgName,
             'role' => $data['role'] ?? 2,
             'updated_at' => now(),

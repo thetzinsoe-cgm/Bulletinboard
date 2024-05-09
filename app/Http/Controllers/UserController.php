@@ -138,7 +138,7 @@ class UserController extends Controller
                 return view('post.postList');
             }
         }
-        return redirect()->back()->withErrors('Email address or password is incorrect');
+        return redirect()->back()->with('error','Email address or password is incorrect');
     }
 
     /**
@@ -164,7 +164,7 @@ class UserController extends Controller
 
         $userData = [
             'email' => $user->email,
-            'password' => Hash::make($request->input('passwordConfirmation')), // Use 'password' for new password
+            'password' => $request->input('passwordConfirmation'), // Use 'password' for new password
             'name' => $user->name,
             'image' => $user->image,
             'role' => $user->role
@@ -175,7 +175,7 @@ class UserController extends Controller
         if ($user->role == 1) {
             return redirect()->route('user#list')->with('success', 'Password updated successfully.'); // Redirect admin user
         } else {
-            return redirect()->route('post.postList')->with('success', 'Password updated successfully.'); // Redirect regular user
+            return view('post.postList'); // Redirect regular user
         }
     }
 
