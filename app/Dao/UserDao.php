@@ -25,18 +25,11 @@ class UserDao implements UserDaoInterface
      */
     public function createUser(array $data): void
     {
-        $imgName = '';
-        if (isset($data['image']) && $data['image']->isValid()) {
-            $image = $data['image'];
-            $imgName = uniqid() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/images', $imgName);
-        }
-
         User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'img' => $imgName,
+            'img' => $data['image']?:null,
             'role' => $data['role'] ?? 2,
             'created_at' => now(),
         ]);
@@ -62,28 +55,12 @@ class UserDao implements UserDaoInterface
      */
     public function updateUser(array $data, $id): void
     {
-        $imgName = '';
         $user = User::findOrFail($id);
-        if (isset($data['image']) && $data['image']->isValid()) {
-            $image = $data['image'];
-            $imgName = uniqid() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/images', $imgName);
-        } else {
-            $user = User::find($id);
-            $imgName = $user->img;
-        }
-
-        if (isset($data['password'])) {
-            $password = Hash::make($data['password']);
-        } else {
-            $password = $user->password;
-        }
-
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $password,
-            'img' => $imgName,
+            'password' => $data['password'],
+            'img' => $data['image'],
             'role' => $data['role'] ?? 2,
             'updated_at' => now(),
         ]);
@@ -101,30 +78,24 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Login user by email and password
-     * @param Request data
-     * @return User
+     * check login
+     *
+     * @param [type] $user
+     * @return object|null
      */
-    public function checkLogin($user): ?object
+    public function checkLogin($user): object
     {
         $email = $user['email'];
-        $foundUser = User::where('email', $email)->first();
-        if (!$foundUser) {
-            return null;
-        }
-        return $foundUser;
+        return User::where('email', $email)->first();
     }
 
     /**
-     * find user with email
-     * @return user
-     */
-    /**
-     * Find user by email
+     * find user by email
+     *
      * @param string $email
      * @return User|null
      */
-    public function findUserWithEmail(string $email): ?object
+    public function findUserWithEmail(string $email): ?User
     {
         return User::where('email', $email)->first();
     }

@@ -1,3 +1,7 @@
+<?php
+const ADMIN_ROLE = 1;
+const USER_ROLE = 2;
+?>
 @extends('layout.master')
 @section('content')
     <div class="card o-hidden border-0 shadow-lg col-8 m-auto">
@@ -16,6 +20,11 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Update Account!</h1>
                         </div>
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <form class="user" action="{{ route('user#update', $user->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -31,9 +40,13 @@
                             </div>
                             <div class="form-group">
                                 <select class="custom-select" name="role" id="inputGroupSelect01">
-                                    <option  selected disabled>Select Role</option>
-                                    <option value="1" @if ($user->role == 1) selected @endif>Admin</option>
-                                    <option value="2" @if ($user->role == 2) selected @endif>User</option>
+                                    <option selected disabled>Select Role</option>
+                                    <option value="<?php echo ADMIN_ROLE; ?>" <?php if ($user->role == ADMIN_ROLE) {
+                                        echo 'selected';
+                                    } ?>>Admin</option>
+                                    <option value="<?php echo USER_ROLE; ?>" <?php if ($user->role == USER_ROLE) {
+                                        echo 'selected';
+                                    } ?>>User</option>
                                 </select>
                             </div>
 

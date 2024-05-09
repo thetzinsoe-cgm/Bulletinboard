@@ -11,6 +11,11 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <form class="user" action="{{ route('store#user') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf

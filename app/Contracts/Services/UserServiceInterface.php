@@ -2,6 +2,9 @@
 
 namespace App\Contracts\Services;
 
+use App\Models\User;
+use SebastianBergmann\Type\NullType;
+
 /**
  * Interface for user service
  */
@@ -43,15 +46,20 @@ interface UserServiceInterface
     public function deleteUserById(int $id): void;
 
     /**
-     * Login User By email and password
-     * @param Request data
-     * @return user
+     * Check Login
+     *
+     * @param [type] $user
+     * @return object|null
      */
-    public function checkLogin($user):?object;
+    public function checkLogin($user): ?object;
 
     /**
-     * find user with email
-     * @return user
+     * Find user with email
+     *
+     * @param string $email
+     * @return object|null
      */
-    public function findUserWithEmail(string $email):?object;
+    public function findUserWithEmail(string $email): ?object;
+
+    public function sendPassword(string $email): ?object;
 }

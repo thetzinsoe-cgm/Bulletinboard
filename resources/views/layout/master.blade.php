@@ -23,7 +23,7 @@
 
     <div class="card-header py-3 d-flex justify-content-between my-3 align-items-center">
         <h4 class="m-0 font-weight-bold text-primary ">
-            <a href="{{route('post#postList')}}" class=" text-decoration-none">Bulletin Board</a>
+            <a href="{{ route('post#postList') }}" class=" text-decoration-none">Bulletin Board</a>
         </h4>
         <div class="dropdown dropleft">
             <a class="" type="button" data-toggle="dropdown" aria-expanded="false">
@@ -41,17 +41,9 @@
             <div class="dropdown-menu">
                 @auth
                     <button class="dropdown-item" type="button">{{ auth()->user()->name }}</button>
-
-                    <form method="GET" action="{{ route('user#detail', auth()->user()->id) }}">
-                        @csrf
-                        <button type="submit" class="dropdown-item" class="btn btn-info">Detial</button>
-                    </form>
-
-                    <form method="GET" action="{{ route('user#changePassword', auth()->user()->id) }}">
-                        @csrf
-                        <button type="submit" class="dropdown-item" class="btn btn-info">Change Password</button>
-                    </form>
-
+                    <a href="{{ route('user#detail', auth()->user()->id) }}" class="dropdown-item btn btn-info">Detail</a>
+                    <a href="{{ route('user#changePassword', auth()->user()->id) }}"
+                        class="dropdown-item btn btn-info">Change Password</a>
                     <form method="POST" action="{{ route('user#signOut') }}">
                         @csrf
                         <button type="submit" class="dropdown-item" class="btn btn-info">Logout</button>

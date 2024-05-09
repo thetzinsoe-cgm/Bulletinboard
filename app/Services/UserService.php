@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Mail\SendPassMail;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Contracts\Dao\UserDaoInterface;
 use App\Contracts\Services\UserServiceInterface;
 
@@ -17,8 +21,9 @@ class UserService implements UserServiceInterface
     private $userDao;
 
     /**
-     * Class Constructor
-     * @param UserDaoInterface
+     * Class Construction
+     *
+     * @param UserDaoInterface $userDao
      * @return void
      */
     public function __construct(UserDaoInterface $userDao)
@@ -36,18 +41,29 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * Save user
-     * @param array
+     * Save User
+     *
+     * @param array $data
      * @return void
      */
     public function createUser(array $data): void
     {
+        $imgName = '';
+        if (isset($data['image']) && $data['image']->isValid()) {
+            $image = $data['image'];
+            $imgName = uniqid() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/images', $imgName);
+            $data['image'] = $imgName;
+        }else{
+            $data['image'] = null;
+        }
         $this->userDao->createUser($data);
     }
 
     /**
-     * Get user by id
-     * @param int $id
+     * Get user by Id
+     *
+     * @param integer $id
      * @return object
      */
     public function getUserById(int $id): object
@@ -63,12 +79,28 @@ class UserService implements UserServiceInterface
      */
     public function updateUser(array $data, int $id): void
     {
+        $user = $this->userDao->getUserById($id);
+        if (isset($data['image']) && $data['image']->isValid()) {
+            $image = $data['image'];
+            $imgName = uniqid() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/images', $imgName);
+            $data['image'] = $imgName;
+        } else {
+            $data['image'] = $user->img;
+        }
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            $data['password'] = $user->password;
+        }
         $this->userDao->updateUser($data, $id);
     }
 
     /**
      * Delete user by id
-     * @param int $id
+     *
+     * @param integer $id
      * @return void
      */
     public function deleteUserById(int $id): void
@@ -78,12 +110,13 @@ class UserService implements UserServiceInterface
 
     /**
      * Login user by email and password
-     * @param Request data
-     * @return user
+     *
+     * @param [type] $user
+     * @return object|null
      */
     public function checkLogin($user): ?object
     {
-       return $this->userDao->checkLogin($user);
+        return $this->userDao->checkLogin($user);
     }
 
     /**
@@ -93,5 +126,23 @@ class UserService implements UserServiceInterface
     public function findUserWithEmail(string $email): ?object
     {
         return $this->userDao->findUserWithEmail($email);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function sendPassword(string $email): ?object
+    {
+        $user = $this->userDao->findUserWithEmail($email);
+        $newPass = Str::ascii(Str::random(6));
+        if ($user) {
+            $user->password = $newPass;
+            $this->userDao->updateUser($user->toArray(), $user->id);
+            Mail::to($email)->send(new SendPassMail(['name' => $user->name, 'newPassword' => $newPass]));
+        }
+        return $user;
     }
 }

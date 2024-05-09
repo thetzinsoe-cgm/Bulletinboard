@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Mail\SendPassMail;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use App\Contracts\Services\UserServiceInterface;
 
 class UserController extends Controller
@@ -17,6 +14,8 @@ class UserController extends Controller
      * user interface
      */
     private $userService;
+    const ADMIN_ROLE = 1;
+    const USER_ROLE = 2;
 
     /**
      * Create a new controller instance.
@@ -60,24 +59,33 @@ class UserController extends Controller
     }
 
     /**
-     * Store user
-     * @return \Illuminate\Http\Response
+     * Store User
+     *
+     * @param Request $request
+     * @return view
      */
     public function storeUser(Request $request)
     {
-        $this->userService->createUser($request->only([
-            'email',
-            'password',
-            'name',
-            'image',
-        ]));
-        return redirect()->route('user#list');
+        $user = $this->userService->findUserWithEmail($request->email);
+        if ($user) {
+            return redirect()->back()->with('error', 'This email is already in use!');
+        } else {
+            $this->userService->createUser($request->only([
+                'email',
+                'password',
+                'name',
+                'image',
+            ]));
+            return redirect()->route('user#list');
+        }
     }
 
     /**
-     * Detail user
-     * * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return view
      */
     public function detailUser(Request $request, $id)
     {
@@ -86,28 +94,36 @@ class UserController extends Controller
     }
 
     /**
-     * Update user
-     * @return view
+     * update User
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
      */
     public function updateUser(Request $request, $id)
     {
-        $this->userService->updateUser($request->only([
-            'email',
-            'password',
-            'name',
-            'image',
-            'role',
-        ]), $id);
-        return redirect()->route('user#list');
+        $user = $this->userService->findUserWithEmail($request->email);
+        if ($user && $user->id != $id) {
+            return redirect()->back()->with('error', 'This email is already in use!');
+        } else {
+            $this->userService->updateUser($request->only([
+                'email',
+                'password',
+                'name',
+                'image',
+                'role',
+            ]), $id);
+            return redirect()->route('user#list');
+        }
     }
 
     /**
      * Delete user
-     * @param  \App\Http\Requests\UserCreateRequest
+     * @param  Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function deleteUser(Request $request, $id)
+    public function deleteUser($id)
     {
         $this->userService->deleteUserById($id);
         return redirect()->back();
@@ -135,7 +151,7 @@ class UserController extends Controller
         ]);
         $user = $this->userService->checkLogin($credential);
         if (Auth::attempt($credential)) {
-            if ($user->role == 1) {
+            if ($user->role == self::ADMIN_ROLE) {
                 return redirect()->route('user#list');
             } else {
                 return redirect()->route('post#postList');
@@ -154,7 +170,9 @@ class UserController extends Controller
     }
 
     /**
-     * update password
+     * update Password
+     *
+     * @param Request $request
      * @return view
      */
     public function updatePassword(Request $request)
@@ -165,9 +183,9 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'The current password is incorrect.');
         }
 
-        $this->resetPassword($user,$request->input('passwordConfirmation'));
+        $this->resetPassword($user, $request->input('passwordConfirmation'));
 
-        if ($user->role == 1) {
+        if ($user->role == self::ADMIN_ROLE) {
             return redirect()->route('user#list')->with('success', 'Password updated successfully.'); // Redirect admin user
         } else {
             return redirect()->route('post#postList'); // Redirect regular user
@@ -186,34 +204,39 @@ class UserController extends Controller
 
     /**
      * forgot password
-     * @return view
+     *
+     * @return void
      */
     public function forgotPassword()
     {
         return view('user.forgotPassword');
     }
 
+    /**
+     * Password send from mail
+     * @return view
+     * @param Request data
+     */
     public function sendPassword(Request $request)
     {
-        // Retrieve email from the request
         $email = $request->input('email');
-        $user = $this->userService->findUserWithEmail($email);
-        $newPass = Str::ascii( Str::random(6) );
+        $user = $this->userService->sendPassword($email);
 
         if ($user) {
-            $this->resetPassword($user,$newPass);
-            Mail::to($email)->send(new SendPassMail(['name' => $user->name,'newPassword'=>$newPass]));
             return redirect()->back()->with('success', 'Password reset email sent successfully, check your mail box!');
         } else {
             return redirect()->back()->with('error', 'Email not found.');
         }
     }
 
-     /**
+    /**
      * reset Password
+     *
+     * @param [type] $user
+     * @param [type] $password
      * @return void
      */
-    public function resetPassword($user,$password)
+    public function resetPassword($user, $password)
     {
         $userData = [
             'email' => $user->email,
@@ -224,5 +247,4 @@ class UserController extends Controller
         ];
         $this->userService->updateUser($userData, $user->id);
     }
-
 }
