@@ -68,12 +68,12 @@ class UserDao implements UserDaoInterface
             $image = $data['image'];
             $imgName = uniqid() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/images', $imgName);
-        }else{
+        } else {
             $user = User::find($id);
             $imgName = $user->img;
         }
 
-        if(isset($data['password'])) {
+        if (isset($data['password'])) {
             $password = Hash::make($data['password']);
         } else {
             $password = $user->password;
@@ -113,5 +113,19 @@ class UserDao implements UserDaoInterface
             return null;
         }
         return $foundUser;
+    }
+
+    /**
+     * find user with email
+     * @return user
+     */
+    /**
+     * Find user by email
+     * @param string $email
+     * @return User|null
+     */
+    public function findUserWithEmail(string $email): ?object
+    {
+        return User::where('email', $email)->first();
     }
 }

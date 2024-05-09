@@ -85,4 +85,13 @@ class UserService implements UserServiceInterface
     {
        return $this->userDao->checkLogin($user);
     }
+
+    /**
+     * find user with email
+     * @return user
+     */
+    public function findUserWithEmail(string $email): ?object
+    {
+        return $this->userDao->findUserWithEmail($email);
+    }
 }

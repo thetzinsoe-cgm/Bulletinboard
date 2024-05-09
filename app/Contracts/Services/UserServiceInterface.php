@@ -48,4 +48,10 @@ interface UserServiceInterface
      * @return user
      */
     public function checkLogin($user):?object;
+
+    /**
+     * find user with email
+     * @return user
+     */
+    public function findUserWithEmail(string $email):?object;
 }

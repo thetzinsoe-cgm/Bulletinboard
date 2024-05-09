@@ -48,4 +48,10 @@ interface UserDaoInterface
      * @return User
      */
     public function checkLogin($user):?object;
+
+    /**
+     * find email
+     * @return user
+     */
+    public function findUserWithEmail(string $email):?object;
 }

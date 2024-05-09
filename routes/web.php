@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,10 @@ Route::prefix('user')->group(function () {
     Route::post('/logout',[UserController::class,'signOut'])->name('user#signOut');
     Route::get('/changePassword',[UserController::class,'changePassword'])->name('user#changePassword');
     Route::post('/updatePassword',[UserController::class,'updatePassword'])->name('user#updatePassword');
-    Route::post('/forgotPassword',[UserController::class,'forgotPassword'])->name('user#forgotPassword');
+    Route::get('/forgotPassword',[UserController::class,'forgotPassword'])->name('user#forgotPassword');
+    Route::post('/sendPassword',[UserController::class,'sendPassword'])->name('user#sendPassword');
+});
+
+Route::prefix('post')->group(function(){
+    Route::get('/postList',[PostController::class,'postList'])->name('post#postList');
 });

@@ -22,7 +22,9 @@
 <body id="page-top">
 
     <div class="card-header py-3 d-flex justify-content-between my-3 align-items-center">
-        <h4 class="m-0 font-weight-bold text-primary ">Bulletin Board</h4>
+        <h4 class="m-0 font-weight-bold text-primary ">
+            <a href="{{route('post#postList')}}" class=" text-decoration-none">Bulletin Board</a>
+        </h4>
         <div class="dropdown dropleft">
             <a class="" type="button" data-toggle="dropdown" aria-expanded="false">
                 @auth
