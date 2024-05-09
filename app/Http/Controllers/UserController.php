@@ -81,7 +81,7 @@ class UserController extends Controller
     }
 
     /**
-     * Undocumented function
+     *Detail view of user
      *
      * @param Request $request
      * @param [type] $id
