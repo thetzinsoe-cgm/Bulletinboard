@@ -10,9 +10,11 @@ interface PostServiceInterface
     public function getPost():object;
 
     /**
-     * create user
+     * create post
+     *
+     * @return void
      */
-    public function createPost():void;
+    public function createPost(array $data):void;
 
     /**
      * Get one post

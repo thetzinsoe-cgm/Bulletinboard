@@ -19,7 +19,7 @@ interface PostDaoInterface
     /**
      * create user
      */
-    public function createPost():void;
+    public function createPost(array $data):void;
 
     /**
      * Get one post

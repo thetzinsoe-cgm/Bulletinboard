@@ -115,7 +115,7 @@ class UserService implements UserServiceInterface
     /**
      * Login user by email and password
      *
-     * @param [type] $user
+     * @param \App\Models\User $user
      * @return object|null
      */
     public function checkLogin($user): ?object
@@ -125,7 +125,7 @@ class UserService implements UserServiceInterface
 
     /**
      * find user with email
-     * @return user
+     * @return \App\Models\User user
      */
     public function findUserWithEmail(string $email): ?object
     {

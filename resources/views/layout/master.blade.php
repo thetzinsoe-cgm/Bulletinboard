@@ -20,8 +20,7 @@
 </head>
 
 <body id="page-top">
-
-    <div class="card-header py-3 d-flex justify-content-between my-3 align-items-center">
+    <div class="card-header d-flex justify-content-between align-items-center fixed-top">
         <h4 class="m-0 font-weight-bold text-primary ">
             <a href="{{ route('post#postList') }}" class=" text-decoration-none">Bulletin Board</a>
         </h4>
@@ -58,6 +57,7 @@
             </div>
         </div>
     </div>
+    <div class="my-5"></div><br>
     @yield('content')
 
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>

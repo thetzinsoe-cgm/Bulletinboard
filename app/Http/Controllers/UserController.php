@@ -150,8 +150,8 @@ class UserController extends Controller
             'email',
             'password',
         ]);
-        $user = $this->userService->checkLogin($credential);
         if (Auth::attempt($credential)) {
+            $user = $this->userService->checkLogin($credential);
             if ($user->role == config('constants.ADMIN_ROLE')) {
                 return redirect()->route('user#list');
             } else {
