@@ -25,14 +25,7 @@ class UserDao implements UserDaoInterface
      */
     public function createUser(array $data): void
     {
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'img' => $data['image']?:null,
-            'role' => $data['role'] ?? 2,
-            'created_at' => now(),
-        ]);
+        User::create($data);
     }
 
     /**
@@ -56,14 +49,7 @@ class UserDao implements UserDaoInterface
     public function updateUser(array $data, $id): void
     {
         $user = User::findOrFail($id);
-        $user->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-            'img' => $data['image'],
-            'role' => $data['role'] ?? 2,
-            'updated_at' => now(),
-        ]);
+        $user->update($data);
     }
 
     /**

@@ -14,8 +14,6 @@ class UserController extends Controller
      * user interface
      */
     private $userService;
-    const ADMIN_ROLE = 1;
-    const USER_ROLE = 2;
 
     /**
      * Create a new controller instance.
@@ -30,7 +28,7 @@ class UserController extends Controller
     /**
      * Show user list
      *
-     * @return view user create
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -41,7 +39,7 @@ class UserController extends Controller
     /**
      * Show user list
      *
-     * @return view user list
+     * @return \Illuminate\Contracts\View\View
      */
     public function userList()
     {
@@ -51,7 +49,7 @@ class UserController extends Controller
 
     /**
      * Create user
-     * @return view create user
+     * @return \Illuminate\Contracts\View\View
      */
     public function createUser()
     {
@@ -62,7 +60,7 @@ class UserController extends Controller
      * Store User
      *
      * @param Request $request
-     * @return view
+     * @return mixed
      */
     public function storeUser(Request $request)
     {
@@ -85,7 +83,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param [type] $id
-     * @return view
+     * @return mixed
      */
     public function detailUser(Request $request, $id)
     {
@@ -98,7 +96,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param [type] $id
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateUser(Request $request, $id)
     {
@@ -130,18 +128,21 @@ class UserController extends Controller
     }
 
     /**
-     * Login user
-     * @return view login user
+     * Login User
+     *
+     * @return \Illuminate\Contracts\View\Factory|Illuminate\Contracts\View\View
      */
     public function loginUser()
     {
         return view('user.loginUser');
     }
 
+
     /**
-     * check login
-     * @param Request Data
-     * @return user
+     * Check login
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function checkLogin(Request $request)
     {
@@ -151,7 +152,7 @@ class UserController extends Controller
         ]);
         $user = $this->userService->checkLogin($credential);
         if (Auth::attempt($credential)) {
-            if ($user->role == self::ADMIN_ROLE) {
+            if ($user->role == config('constants.ADMIN_ROLE')) {
                 return redirect()->route('user#list');
             } else {
                 return redirect()->route('post#postList');
@@ -162,7 +163,7 @@ class UserController extends Controller
 
     /**
      * change password
-     * @return view
+     * @return \Illuminate\Contracts\View\View
      */
     public function changePassword()
     {
@@ -173,19 +174,26 @@ class UserController extends Controller
      * update Password
      *
      * @param Request $request
-     * @return view
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function updatePassword(Request $request)
     {
-        $user = auth()->user();
+        $authUser = auth()->user();
 
-        if (!Hash::check($request->input('password'), $user->password)) {
+        //change array format to pass userService->updateUser(array,int)
+        $user['id'] = $authUser->id;
+        $user['email'] = $authUser->email;
+        $user['password'] = $authUser->password;
+        $user['role'] = $authUser->role;
+
+        if (!Hash::check($request->input('password'), $user['password'])) {
             return redirect()->back()->with('error', 'The current password is incorrect.');
         }
 
-        $this->resetPassword($user, $request->input('passwordConfirmation'));
+        $user['password'] = $request->input('passwordConfirmation');
+        $this->userService->updateUser($user, $user['id']);
 
-        if ($user->role == self::ADMIN_ROLE) {
+        if ($user['role'] == config('constants.ADMIN_ROLE')) {
             return redirect()->route('user#list')->with('success', 'Password updated successfully.'); // Redirect admin user
         } else {
             return redirect()->route('post#postList'); // Redirect regular user
@@ -205,7 +213,7 @@ class UserController extends Controller
     /**
      * forgot password
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\View
      */
     public function forgotPassword()
     {
@@ -214,8 +222,9 @@ class UserController extends Controller
 
     /**
      * Password send from mail
-     * @return view
+     *
      * @param Request data
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function sendPassword(Request $request)
     {
@@ -227,24 +236,5 @@ class UserController extends Controller
         } else {
             return redirect()->back()->with('error', 'Email not found.');
         }
-    }
-
-    /**
-     * reset Password
-     *
-     * @param [type] $user
-     * @param [type] $password
-     * @return void
-     */
-    public function resetPassword($user, $password)
-    {
-        $userData = [
-            'email' => $user->email,
-            'password' => $password, // Use 'password' for new password
-            'name' => $user->name,
-            'image' => $user->image,
-            'role' => $user->role
-        ];
-        $this->userService->updateUser($userData, $user->id);
     }
 }

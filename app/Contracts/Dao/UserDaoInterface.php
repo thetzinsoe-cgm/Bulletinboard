@@ -51,7 +51,8 @@ interface UserDaoInterface
 
     /**
      * find email
-     * @return user
+     * @param string $email
+     * @return User
      */
     public function findUserWithEmail(string $email):?object;
 }

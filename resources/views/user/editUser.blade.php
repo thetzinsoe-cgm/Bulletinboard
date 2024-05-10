@@ -1,7 +1,3 @@
-<?php
-const ADMIN_ROLE = 1;
-const USER_ROLE = 2;
-?>
 @extends('layout.master')
 @section('content')
     <div class="card o-hidden border-0 shadow-lg col-8 m-auto">
@@ -41,10 +37,10 @@ const USER_ROLE = 2;
                             <div class="form-group">
                                 <select class="custom-select" name="role" id="inputGroupSelect01">
                                     <option selected disabled>Select Role</option>
-                                    <option value="<?php echo ADMIN_ROLE; ?>" <?php if ($user->role == ADMIN_ROLE) {
+                                    <option value="<?php echo  config('constants.ADMIN_ROLE'); ?>" <?php if ($user->role == config('constants.ADMIN_ROLE')) {
                                         echo 'selected';
                                     } ?>>Admin</option>
-                                    <option value="<?php echo USER_ROLE; ?>" <?php if ($user->role == USER_ROLE) {
+                                    <option value="<?php echo  config('constants.USER_ROLE'); ?>" <?php if ($user->role == config('constants.USER_ROLE')) {
                                         echo 'selected';
                                     } ?>>User</option>
                                 </select>

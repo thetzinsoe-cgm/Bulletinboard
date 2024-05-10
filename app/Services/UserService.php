@@ -53,10 +53,13 @@ class UserService implements UserServiceInterface
             $image = $data['image'];
             $imgName = uniqid() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/images', $imgName);
-            $data['image'] = $imgName;
-        }else{
-            $data['image'] = null;
+            $data['img'] = $imgName;
+        } else {
+            $data['img'] = null;
         }
+        $data['password'] = Hash::make($data['password']);
+        $data['role'] = $data['role'] ?? config('constants.ADMIN_ROLE');
+        $data['created_at'] = now();
         $this->userDao->createUser($data);
     }
 
@@ -84,9 +87,9 @@ class UserService implements UserServiceInterface
             $image = $data['image'];
             $imgName = uniqid() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/images', $imgName);
-            $data['image'] = $imgName;
+            $data['img'] = $imgName;
         } else {
-            $data['image'] = $user->img;
+            $data['img'] = $user->img;
         }
 
         if (isset($data['password'])) {
@@ -94,6 +97,7 @@ class UserService implements UserServiceInterface
         } else {
             $data['password'] = $user->password;
         }
+        $data['updated_at'] = now();
         $this->userDao->updateUser($data, $id);
     }
 
@@ -139,7 +143,7 @@ class UserService implements UserServiceInterface
         $user = $this->userDao->findUserWithEmail($email);
         $newPass = Str::ascii(Str::random(6));
         if ($user) {
-            $user->password = $newPass;
+            $user->password = Hash::make($newPass);
             $this->userDao->updateUser($user->toArray(), $user->id);
             Mail::to($email)->send(new SendPassMail(['name' => $user->name, 'newPassword' => $newPass]));
         }
