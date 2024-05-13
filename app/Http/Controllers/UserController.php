@@ -32,8 +32,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = null;
-        return view('user.createUser', compact('user'));
+        return redirect()->route("post#postList");
     }
 
     /**
@@ -179,8 +178,6 @@ class UserController extends Controller
     public function updatePassword(Request $request)
     {
         $authUser = auth()->user();
-
-        //change array format to pass userService->updateUser(array,int)
         $user['id'] = $authUser->id;
         $user['email'] = $authUser->email;
         $user['password'] = $authUser->password;

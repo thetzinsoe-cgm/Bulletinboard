@@ -11,13 +11,28 @@ use PhpParser\Builder\Interface_;
 interface PostDaoInterface
 {
     /**
-     * Get user list
+     * Get all post
      * @return object
      */
-    public function getPost():object;
+    public function getAllPost():object;
 
     /**
-     * create user
+     * Get Public Post
+     *
+     * @return object
+     */
+    public function getPublicPost():object;
+
+    /**
+     * Get My Post
+     *
+     * @param integer $id
+     * @return object
+     */
+    public function getMyPost(int $id):object;
+
+    /**
+     * create psot
      */
     public function createPost(array $data):void;
 

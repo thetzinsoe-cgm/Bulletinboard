@@ -32,6 +32,17 @@ class PostController extends Controller
     }
 
     /**
+     * Show My post
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showMyPost()
+    {
+        $posts = $this->postService->getMyPost();
+        return view('post.postList', compact('posts'));
+    }
+
+    /**
      * create post
      *
      * @param PostCreateRequest $request

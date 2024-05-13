@@ -58,7 +58,7 @@ class UserService implements UserServiceInterface
             $data['img'] = null;
         }
         $data['password'] = Hash::make($data['password']);
-        $data['role'] = $data['role'] ?? config('constants.ADMIN_ROLE');
+        $data['role'] = $data['role'] ?? config('constants.USER_ROLE');
         $data['created_at'] = now();
         $this->userDao->createUser($data);
     }

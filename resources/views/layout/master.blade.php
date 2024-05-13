@@ -41,7 +41,7 @@
                 @auth
                     <button class="dropdown-item" type="button">{{ auth()->user()->name }}</button>
                     <a href="{{ route('user#detail', auth()->user()->id) }}" class="dropdown-item btn btn-info">Detail</a>
-                    <a href="{{ route('user#changePassword', auth()->user()->id) }}"
+                    <a href="{{ route('user#changePassword')}}"
                         class="dropdown-item btn btn-info">Change Password</a>
                     <form method="POST" action="{{ route('user#signOut') }}">
                         @csrf

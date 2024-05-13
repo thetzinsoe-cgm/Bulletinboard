@@ -13,9 +13,24 @@ class PostDao implements PostDaoInterface
      * Get post list
      * @return object
      */
-    public function getPost(): object
+    public function getAllPost(): object
+    {
+        return Post::Where('flag',true)->orderBy('updated_at','Desc')->get();
+    }
+
+    /**
+     * Get public Post
+     *
+     * @return object
+     */
+    public function getPublicPost(): object
     {
         return Post::orderBy('updated_at','Desc')->get();
+    }
+
+    public function getMypost(int $id): object
+    {
+        return Post::where('created_by',$id)->orderBy('updated_at','Desc')->get();
     }
 
     /**

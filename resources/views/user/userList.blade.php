@@ -2,6 +2,7 @@
 @section('content')
     <div class="card-body col-10 m-auto">
         <a href="{{ route('user#create') }}" class="btn btn-info mb-2">Create User</a>
+        <a href="{{ route('post#postList') }}" class="btn btn-info mb-2 float-right">Back</a>
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>

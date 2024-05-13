@@ -10,6 +10,13 @@ interface PostServiceInterface
     public function getPost():object;
 
     /**
+     * Get My Post
+     *
+     * @return object
+     */
+    public function getMyPost():object;
+
+    /**
      * create post
      *
      * @return void
