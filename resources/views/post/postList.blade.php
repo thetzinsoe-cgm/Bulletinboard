@@ -29,7 +29,7 @@
                         @endif
                         <hr>
                         <p>{{ $post->description }}</p>
-                        <a href="{{ route('post#comment', $post->id) }}" class="btn btn-outline-secondary">Comment
+                        <a href="#" class="btn btn-outline-secondary">Comment
                             Section</a>
                         <p class="text-center">----------xxx---------</p>
                     </div>
