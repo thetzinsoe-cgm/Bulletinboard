@@ -67,8 +67,8 @@ class UserDao implements UserDaoInterface
     {
         DB::transaction(function () use ($id) {
             $user = User::findOrFail($id);
-            Post::whereIn('created_by', $id)->delete();
-            Comment::whereIn('user_id', $id)->delete();
+            Post::where('created_by', $id)->delete();
+            Comment::where('user_id', $id)->delete();
             $user->delete();
         });
     }
