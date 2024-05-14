@@ -8,13 +8,17 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdminOrIsAuthorize;
+use App\Http\Middleware\IsNewUser;
+use App\Http\Middleware\IsOwnComment;
 
 Route::get('/', [UserController::class, 'index'])->name('home');
 Route::prefix('user')->group(function () {
-    Route::get('/create', [UserController::class, 'createUser'])->name('user#create');
-    Route::post('/store', [UserController::class, 'storeUser'])->name('store#user');
-    Route::get('/login', [UserController::class, 'loginUser'])->name('user#login');
-    Route::post('/checkLogin', [UserController::class, 'checkLogin'])->name('user#checkLogin');
+    Route::group(['middleware' => [IsNewUser::class]], function () {
+        Route::get('/create', [UserController::class, 'createUser'])->name('user#create');
+        Route::post('/store', [UserController::class, 'storeUser'])->name('store#user');
+        Route::get('/login', [UserController::class, 'loginUser'])->name('user#login');
+        Route::post('/checkLogin', [UserController::class, 'checkLogin'])->name('user#checkLogin');
+    });
     Route::post('/logout', [UserController::class, 'signOut'])->name('user#signOut');
     Route::group(['middleware' => [IsLoggedIn::class]], function () {
         Route::get('/changePassword', [UserController::class, 'changePassword'])->name('user#changePassword');
@@ -41,7 +45,9 @@ Route::prefix('post')->middleware(IsLoggedIn::class)->group(function () {
         Route::post('/delete/{id}', [PostController::class, 'deletePost'])->name('post#delete');
     });
 
-    Route::get('/{id}/comments',[CommentController::class,'getComment'])->name('post#comment');
-    Route::post('/{id}/commentCreate',[CommentController::class,'createComment'])->name('post#createComment');
+    Route::get('/{id}/comments', [CommentController::class, 'getComment'])->name('post#comment');
+    Route::post('/{id}/commentCreate', [CommentController::class, 'createComment'])->name('post#createComment');
+    Route::get('/comment/{id}/edit', [CommentController::class, 'editComment'])->name('post#editComment')->middleware(IsOwnComment::class);
+    Route::patch('/comment/{id}/update', [CommentController::class, 'updateComment'])->name('post#updateComment')->middleware(IsOwnComment::class);
+    Route::post('/comment/{id}', [CommentController::class, 'deleteComment'])->name('post#deleteComment');
 });
-

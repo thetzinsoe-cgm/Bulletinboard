@@ -15,11 +15,19 @@ class CommentDao implements CommentDaoInterface
      * @param integer $postId
      * @return Comment|null
      */
-    public function getComment(int $postId): ?Object
+    public function getCommentByPost(int $postId): ?Object
     {
-        return Comment::where('post_id', $postId)->get();
+        return DB::table('comments')
+            ->join('users', 'users.id', '=', 'comments.user_id')
+            ->select('comments.*', 'users.name')->where('comments.post_id', $postId)
+            ->orderBy('updated_at','desc')
+            ->get();
     }
 
+    public function getCommentById(int $commentId): object|null
+    {
+        return Comment::where('id', $commentId)->first();
+    }
 
     /**
      * Adding Comment
@@ -40,8 +48,7 @@ class CommentDao implements CommentDaoInterface
      */
     public function updateComment(array $data, int $id): void
     {
-        $comment = Post::find($id);
-        Comment::update($comment);
+        Comment::find($id)->update($data);
     }
 
     /**
@@ -52,6 +59,6 @@ class CommentDao implements CommentDaoInterface
      */
     public function deleteComment(int $id): void
     {
-        Post::destroy($id);
+        Comment::destroy($id);
     }
 }

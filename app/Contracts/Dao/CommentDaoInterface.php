@@ -11,7 +11,15 @@ interface CommentDaoInterface
      * @param integer $postId
      * @return Comment|null
      */
-    public function getComment(int $postId):?object;
+    public function getCommentByPost(int $postId):?object;
+
+    /**
+     * Get Comment by Comment Id
+     *
+     * @param integer $commentId
+     * @return object|null
+     */
+    public function getCommentById(int $commentId):?object;
 
     /**
      * Adding Comment

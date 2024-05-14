@@ -26,9 +26,20 @@ class CommentService implements CommentServiceInterface
      * @param integer $postId
      * @return Comment|null
      */
-    public function getComment(int $postId): ?object
+    public function getCommentByPost(int $postId): ?object
     {
-        return $this->commentDao->getComment($postId);
+        return $this->commentDao->getCommentByPost($postId);
+    }
+
+    /**
+     * Get Comment By CommentId
+     *
+     * @param integer $commentId
+     * @return object|null
+     */
+    public function getCommentById(int $commentId): object|null
+    {
+        return $this->commentDao->getCommentById($commentId);
     }
 
     /**
@@ -42,7 +53,6 @@ class CommentService implements CommentServiceInterface
     {
         $data['user_id'] = auth()->user()->id;
         $data['post_id'] = $id;
-        $data['created_at'] = now();
         $this->commentDao->addComment($data, $id);
     }
 

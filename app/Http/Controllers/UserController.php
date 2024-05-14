@@ -65,18 +65,24 @@ class UserController extends Controller
     public function storeUser(Request $request)
     {
         $user = $this->userService->findUserWithEmail($request->email);
+
         if ($user) {
             return redirect()->back()->with('error', 'This email is already in use!');
         } else {
-            $this->userService->createUser($request->only([
+            $newUser = $this->userService->createUser($request->only([
                 'email',
                 'password',
                 'name',
                 'image',
             ]));
-            return redirect()->route('user#list');
+
+            // Log the user in after successful creation
+            Auth::login($newUser);
+
+            return redirect()->route('user#list'); // Or any desired route after login
         }
     }
+
 
     /**
      *Detail view of user
@@ -150,7 +156,7 @@ class UserController extends Controller
             'email',
             'password',
         ]);
-        try{
+        try {
             if (Auth::attempt($credential)) {
                 $user = $this->userService->checkLogin($credential);
                 if ($user->role == config('constants.ADMIN_ROLE')) {
@@ -160,7 +166,7 @@ class UserController extends Controller
                 }
             }
             return redirect()->back()->with('error', 'Email address or password is incorrect');
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
