@@ -50,7 +50,6 @@ class PostService implements PostServiceInterface
     public function createPost(array $data): void
     {
         $data['created_by'] = auth()->user()->id ?? null;
-        $data['created_at'] = now();
         $this->postDao->createPost($data);
     }
 
@@ -73,7 +72,6 @@ class PostService implements PostServiceInterface
     public function updatePost(array $data, int $id): void
     {
         $data['updated_by'] = auth()->user()->id ?? null;
-        $data['updated_at'] = now();
         $this->postDao->updatePost($data, $id);
     }
 

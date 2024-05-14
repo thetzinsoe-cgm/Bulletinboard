@@ -2,7 +2,10 @@
 
 namespace App\Dao;
 
+use App\Models\Post;
 use App\Models\User;
+use App\Models\Comment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Contracts\Dao\UserDaoInterface;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +18,7 @@ class UserDao implements UserDaoInterface
      */
     public function getUsers(): object
     {
-        return User::get();
+        return User::paginate(3);
     }
 
     /**
@@ -25,7 +28,9 @@ class UserDao implements UserDaoInterface
      */
     public function createUser(array $data): void
     {
-        User::create($data);
+        DB::transaction(function () use ($data) {
+            User::create($data);
+        });
     }
 
     /**
@@ -48,8 +53,9 @@ class UserDao implements UserDaoInterface
      */
     public function updateUser(array $data, $id): void
     {
-        $user = User::findOrFail($id);
-        $user->update($data);
+        DB::transaction(function () use ($data, $id) {
+            User::find($id)->update($data);
+        });
     }
 
     /**
@@ -59,8 +65,12 @@ class UserDao implements UserDaoInterface
      */
     public function deleteUserById($id): void
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        DB::transaction(function () use ($id) {
+            $user = User::findOrFail($id);
+            Post::whereIn('created_by', $id)->delete();
+            Comment::whereIn('user_id', $id)->delete();
+            $user->delete();
+        });
     }
 
     /**

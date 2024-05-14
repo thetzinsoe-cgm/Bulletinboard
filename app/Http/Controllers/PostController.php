@@ -50,9 +50,7 @@ class PostController extends Controller
      */
     public function createPost()
     {
-        $post = new Post();
-        $post->flag = true;
-        return view('post.createPost', compact('post'));
+        return view('post.createPost');
     }
 
     /**
@@ -104,10 +102,10 @@ class PostController extends Controller
     /**
      * delete post
      *
-     * @param [type] $id
+     * @param int $id
      * @return void
      */
-    public function deletePost($id)
+    public function deletePost(int $id)
     {
         $this->postService->deletePost($id);
         return redirect()->route('post#postList');

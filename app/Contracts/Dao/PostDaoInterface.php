@@ -26,10 +26,10 @@ interface PostDaoInterface
     /**
      * Get My Post
      *
-     * @param integer $id
+     * @param integer $userId
      * @return object
      */
-    public function getMyPost(int $id):object;
+    public function getMyPost(int $userId):object;
 
     /**
      * create psot

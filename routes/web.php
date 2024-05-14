@@ -4,6 +4,7 @@ use App\Http\Middleware\IsOwnPost;
 use App\Http\Middleware\IsLoggedIn;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdminOrIsAuthorize;
@@ -39,4 +40,8 @@ Route::prefix('post')->middleware(IsLoggedIn::class)->group(function () {
         Route::post('/update/{id}', [PostController::class, 'updatePost'])->name('post#update');
         Route::post('/delete/{id}', [PostController::class, 'deletePost'])->name('post#delete');
     });
+
+    Route::get('/{id}/comments',[CommentController::class,'getComment'])->name('post#comment');
+    Route::post('/{id}/commentCreate',[CommentController::class,'createComment'])->name('post#createComment');
 });
+

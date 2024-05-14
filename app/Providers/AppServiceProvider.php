@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
 
          // Business logic registration
          $this->app->bind('App\Contracts\Services\PostServiceInterface', 'App\Services\PostService');
+
+         //Comment Dao Registration
+         $this->app->bind('App\Contracts\Dao\CommentDaoInterface', 'App\Dao\CommentDao');
+
+         // Business logic registration for Comment
+         $this->app->bind('App\Contracts\Services\CommentServiceInterface', 'App\Services\CommentService');
     }
 
     /**
@@ -29,6 +36,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Paginator::useBootstrapFour();
     }
 }

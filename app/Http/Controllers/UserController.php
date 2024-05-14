@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -110,7 +111,7 @@ class UserController extends Controller
                 'image',
                 'role',
             ]), $id);
-            return redirect()->route('user#list');
+            return redirect()->route('post#postList');
         }
     }
 
@@ -149,15 +150,19 @@ class UserController extends Controller
             'email',
             'password',
         ]);
-        if (Auth::attempt($credential)) {
-            $user = $this->userService->checkLogin($credential);
-            if ($user->role == config('constants.ADMIN_ROLE')) {
-                return redirect()->route('user#list');
-            } else {
-                return redirect()->route('post#postList');
+        try{
+            if (Auth::attempt($credential)) {
+                $user = $this->userService->checkLogin($credential);
+                if ($user->role == config('constants.ADMIN_ROLE')) {
+                    return redirect()->route('user#list');
+                } else {
+                    return redirect()->route('post#postList');
+                }
             }
+            return redirect()->back()->with('error', 'Email address or password is incorrect');
+        }catch (Exception $e){
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        return redirect()->back()->with('error', 'Email address or password is incorrect');
     }
 
     /**

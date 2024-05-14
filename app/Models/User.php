@@ -11,6 +11,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public $timestamps = true;
     /**
      * The attributes that are mass assignable.
      *
@@ -27,5 +28,4 @@ class User extends Authenticatable
         'created_at',
         'updated_at',
     ];
-
 }

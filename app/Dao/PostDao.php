@@ -6,6 +6,7 @@ namespace App\Dao;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\Dao\PostDaoInterface;
+use App\Models\Comment;
 
 class PostDao implements PostDaoInterface
 {
@@ -15,7 +16,7 @@ class PostDao implements PostDaoInterface
      */
     public function getAllPost(): object
     {
-        return Post::Where('flag',true)->orderBy('updated_at','Desc')->get();
+        return Post::where('flag', true)->orderBy('updated_at', 'Desc')->paginate(2);
     }
 
     /**
@@ -25,52 +26,65 @@ class PostDao implements PostDaoInterface
      */
     public function getPublicPost(): object
     {
-        return Post::orderBy('updated_at','Desc')->get();
+        return Post::orderBy('updated_at', 'Desc')->paginate(2);
     }
 
-    public function getMypost(int $id): object
+    /**
+     * get my post
+     *
+     * @param integer $userId
+     * @return object
+     */
+    public function getMypost(int $userId): object
     {
-        return Post::where('created_by',$id)->orderBy('updated_at','Desc')->get();
+        return Post::where('created_by', $userId)->orderBy('updated_at', 'Desc')->paginate(2);
     }
 
     /**
      * create post
-     *
+     * @param array $postData
      * @return void
      */
-    public function createPost(array $data): void
+    public function createPost(array $postData): void
     {
-        Post::create($data);
+        DB::transaction(function () use ($postData) {
+            Post::create($postData);
+        });
     }
 
     /**
      * Get one post
      * @return object
-     * @param int $id
+     * @param int $postId
      */
-    public function getPostById(int $id): object
+    public function getPostById(int $postId): object
     {
-        return Post::findOrFail($id);
+        return Post::findOrFail($postId);
     }
 
     /**
      * Update Post
-     * @param array $data
-     * @param int $id
+     * @param array $postData
+     * @param int $postId
      * @return void
      */
-    public function updatePost(array $data, int $id): void
+    public function updatePost(array $postData, int $postId): void
     {
-        Post::findOrFail($id)->update($data);
+        DB::transaction(function () use ($postData, $postId) {
+            Post::where('id', $postId)->update($postData);
+        });
     }
 
     /**
      * Delete post by id
-     * @param int $id
+     * @param int $postId
      * @return void
      */
-    public function deletePost(int $id): void
+    public function deletePost(int $postId): void
     {
-        Post::destroy($id);
+        DB::transaction(function () use ($postId) {
+            Post::findOrFail($postId)->delete();
+            Comment::where('post_id', $postId)->delete();
+        });
     }
 }

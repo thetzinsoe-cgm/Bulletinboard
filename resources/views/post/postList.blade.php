@@ -15,7 +15,7 @@
             </div>
             <div><a href="{{ route('post#create') }}" class="btn btn-info">+new</a></div>
         </div>
-        @if ($posts->count() > 0)
+        @if (isset($posts) && $posts->count() > 0)
             @foreach ($posts as $post)
                 <div class="card-body">
                     <div>
@@ -29,7 +29,8 @@
                         @endif
                         <hr>
                         <p>{{ $post->description }}</p>
-                        <a href="#" class="btn btn-outline-secondary">Comment Section</a>
+                        <a href="{{ route('post#comment', $post->id) }}" class="btn btn-outline-secondary">Comment
+                            Section</a>
                         <p class="text-center">----------xxx---------</p>
                     </div>
                 </div>
@@ -39,6 +40,7 @@
                 <p class="mt-5 text-center text-danger">No posts found.</p>
             </div>
         @endif
+        <div class="m-auto">{{ $posts->links() }}</div>
     </div>
     </div>
 @endsection

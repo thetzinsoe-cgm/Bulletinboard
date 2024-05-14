@@ -59,7 +59,6 @@ class UserService implements UserServiceInterface
         }
         $data['password'] = Hash::make($data['password']);
         $data['role'] = $data['role'] ?? config('constants.USER_ROLE');
-        $data['created_at'] = now();
         $this->userDao->createUser($data);
     }
 
@@ -97,7 +96,6 @@ class UserService implements UserServiceInterface
         } else {
             $data['password'] = $user->password;
         }
-        $data['updated_at'] = now();
         $this->userDao->updateUser($data, $id);
     }
 

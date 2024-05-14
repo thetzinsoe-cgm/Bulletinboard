@@ -17,7 +17,7 @@ class IsAdminOrIsAuthorize
     public function handle(Request $request, Closure $next): Response
     {
         $id = request()->route()->parameter("id");
-        if(Auth::user()->role == 1 || Auth::user()->id == $id) {
+        if(Auth::user()->role == config('constants.ADMIN_ROLE') || Auth::user()->id == $id) {
             return $next($request);
         }
         return abort(403, 'UnAuthorize');

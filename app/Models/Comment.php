@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Comment extends Model
 {
     use HasFactory;
 
@@ -16,11 +16,10 @@ class Post extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'description',
-        'flag',
-        'created_by',
-        'updated_by',
+        'id',
+        'user_id',
+        'post_id',
+        'comment',
         'created_at',
         'updated_at',
     ];
