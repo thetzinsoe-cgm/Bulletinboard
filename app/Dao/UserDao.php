@@ -40,10 +40,19 @@ class UserDao implements UserDaoInterface
      */
     public function getUserById($id): object
     {
-        $user = User::findOrFail($id);
-        return $user;
+        return User::findOrFail($id);
     }
 
+    /**
+     * Get post and comment by user id
+     *
+     * @param integer $id
+     * @return object|null
+     */
+    public function getPostCmByUserId(int $id): object
+    {
+        return User::with(['posts.comments.user'])->findOrFail($id);
+    }
 
     /**
      * Update User

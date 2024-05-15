@@ -28,6 +28,14 @@ interface UserDaoInterface
     public function getUserById(int $id): object;
 
     /**
+     * Get post and comment by user id
+     *
+     * @param integer $id
+     * @return object
+     */
+    public function getPostCmByUserId(int $id): ?object;
+
+    /**
      * Update User
      * @param array $data
      * @param int $id

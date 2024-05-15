@@ -31,6 +31,14 @@ interface UserServiceInterface
     public function getUserById(int $id): object;
 
     /**
+     * Get post and comment By user Id
+     *
+     * @param integer $id
+     * @return object
+     */
+    public function getPostCmByUserId(int $id): ?object;
+
+    /**
      * Update User
      * @param array $data
      * @param int $id

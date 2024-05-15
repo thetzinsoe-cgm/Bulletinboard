@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Contracts\Services;
 
 use App\Models\Comment;
@@ -11,7 +12,7 @@ interface CommentServiceInterface
      * @param integer $postId
      * @return Comment|null
      */
-    public function getCommentByPost(int $postId):?object;
+    public function getCommentByPost(int $postId): ?object;
 
     /**
      * Get comment with comment Id
@@ -19,7 +20,7 @@ interface CommentServiceInterface
      * @param integer $commentId
      * @return object|null
      */
-    public function getCommentById(int $commentId):?object;
+    public function getCommentById(int $commentId): ?object;
 
     /**
      * Add comment
@@ -28,7 +29,7 @@ interface CommentServiceInterface
      * @param integer $id
      * @return void
      */
-    public function addComment(array $data,int $id):void;
+    public function addComment(array $data, int $id): void;
 
     /**
      * update comment
@@ -37,7 +38,7 @@ interface CommentServiceInterface
      * @param integer $id
      * @return void
      */
-    public function updateComment(array $data,int $id):void;
+    public function updateComment(array $data, int $id): void;
 
     /**
      * Delete Comment
@@ -45,5 +46,5 @@ interface CommentServiceInterface
      * @param integer $id
      * @return void
      */
-    public function deleteComment(int $id):void;
+    public function deleteComment(int $id): void;
 }

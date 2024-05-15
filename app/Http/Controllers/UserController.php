@@ -94,7 +94,8 @@ class UserController extends Controller
     public function detailUser(Request $request, $id)
     {
         $user = $this->userService->getUserById($id);
-        return view('user.editUser', compact('user'));
+        $postComment = $user->posts()->paginate(1);
+        return view('user.editUser', compact('user','postComment'));
     }
 
     /**

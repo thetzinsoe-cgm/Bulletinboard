@@ -2,6 +2,7 @@
 @section('content')
     <div class="card o-hidden border-0 shadow-lg my-5 col-6 m-auto">
         <div class="card-body p-0 pt-5">
+            <a href="{{ route('post#postList') }}" class="mx-5 btn btn-info">Back</a>
             <div class="col m-auto">
                 <div>
                     <div class="text-center">

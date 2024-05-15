@@ -34,48 +34,48 @@ class CommentService implements CommentServiceInterface
     /**
      * Get Comment By CommentId
      *
-     * @param integer $commentId
+     * @param integer $cmId
      * @return object|null
      */
-    public function getCommentById(int $commentId): object|null
+    public function getCommentById(int $cmId): object|null
     {
-        return $this->commentDao->getCommentById($commentId);
+        return $this->commentDao->getCommentById($cmId);
     }
 
     /**
      * Add Comment
      *
-     * @param array $data
-     * @param integer $id
+     * @param array $cmData
+     * @param integer $cmId
      * @return void
      */
-    public function addComment(array $data, int $id): void
+    public function addComment(array $cmData, int $cmId): void
     {
-        $data['user_id'] = auth()->user()->id;
-        $data['post_id'] = $id;
-        $this->commentDao->addComment($data, $id);
+        $cmData['user_id'] = auth()->user()->id;
+        $cmData['post_id'] = $cmId;
+        $this->commentDao->addComment($cmData, $cmId);
     }
 
     /**
      * Update Comment
      *
-     * @param array $data
-     * @param integer $id
+     * @param array $cmData
+     * @param integer $cmId
      * @return void
      */
-    public function updateComment(array $data, int $id): void
+    public function updateComment(array $cmData, int $cmId): void
     {
-        $this->commentDao->updateComment($data, $id);
+        $this->commentDao->updateComment($cmData, $cmId);
     }
 
     /**
      * Delete Comment
      *
-     * @param integer $id
+     * @param integer $cmId
      * @return void
      */
-    public function deleteComment(int $id): void
+    public function deleteComment(int $cmId): void
     {
-        $this->commentDao->deleteComment($id);
+        $this->commentDao->deleteComment($cmId);
     }
 }

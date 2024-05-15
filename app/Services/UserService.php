@@ -74,6 +74,17 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * Get Post Comment By UserId
+     *
+     * @param integer $id
+     * @return array
+     */
+    public function getPostCmByUserId(int $id): ?object
+    {
+        return $this->userDao->getPostCmByUserId($id);
+    }
+
+    /**
      * Update User
      * @param array $data
      * @param int $id

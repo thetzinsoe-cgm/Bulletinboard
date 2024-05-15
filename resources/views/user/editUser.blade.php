@@ -4,11 +4,11 @@
         <div class="card-body p-0">
             <a href="{{ route('post#postList') }}" class="m-5 btn btn-info">Back</a>
             <div class="row">
-                <div class="col-lg-5 text-center d-flex align-items-center justify-content-center">
+                <div class="col-lg-5 text-center d-flex align-items-center justify-content-center mb-5">
                     @if ($user->img)
-                        <img src="{{ asset('storage/images/' . $user->img) }} " height="400px" alt="">
+                        <img src="{{ asset('storage/images/' . $user->img) }} " height="300px" alt="">
                     @else
-                        <img src="{{ asset('img/default.png') }} " height="400px" alt="">
+                        <img src="{{ asset('img/default.png') }} " height="300px" alt="">
                     @endif
                 </div>
                 <div class="col-lg-7">
@@ -55,16 +55,37 @@
 
                             <input type="submit" class="btn btn-primary btn-user btn-block" value = "Update Account">
                         </form>
-                        <hr>
-                        <div class="text-center">
-                            <a class="small" href="#">Forgot Password?</a>
-                        </div>
-                        <div class="text-center">
-                            <a class="small mb-3" href="#">Already have an account? Login!</a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <hr>
+
+        @if (!empty($postComment) && $postComment->hasPages())
+            @foreach ($postComment as $post)
+                <div class="mx-5">
+                    <h2>{{ $post->title }}</h2>
+                    <p>{{ $post->description }}</p>
+
+                    <i>comment</i>
+                    @if (!empty($post->comments) && count($post->comments) > 0)
+                        <ul>
+                            @foreach ($post->comments as $comment)
+                                <li>
+                                    <strong>{{ $comment->user->name }}</strong>: {{ $comment->comment }} -
+                                    <small>{{ $comment->created_at }}</small>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>No comments found.</p>
+                    @endif
+                </div>
+            @endforeach
+            <div class="m-auto">{{ $postComment->links() }}</div>
+        @else
+        @endif
+
     </div>
 @endsection

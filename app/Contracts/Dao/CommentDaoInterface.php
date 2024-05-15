@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Contracts\Dao;
 
 use App\Models\Comment;
@@ -11,7 +12,7 @@ interface CommentDaoInterface
      * @param integer $postId
      * @return Comment|null
      */
-    public function getCommentByPost(int $postId):?object;
+    public function getCommentByPost(int $postId): ?object;
 
     /**
      * Get Comment by Comment Id
@@ -19,14 +20,14 @@ interface CommentDaoInterface
      * @param integer $commentId
      * @return object|null
      */
-    public function getCommentById(int $commentId):?object;
+    public function getCommentById(int $commentId): ?object;
 
     /**
      * Adding Comment
      *
      * @return void
      */
-    public function addComment(array $data):void;
+    public function addComment(array $data): void;
 
     /**
      * Update Comment
@@ -34,7 +35,7 @@ interface CommentDaoInterface
      * @param integer $id
      * @return void
      */
-    public function updateComment(array $data,int $id):void;
+    public function updateComment(array $data, int $id): void;
 
     /**
      * Delete Comment
@@ -42,5 +43,5 @@ interface CommentDaoInterface
      * @param integer $id
      * @return void
      */
-    public function deleteComment(int $id):void;
+    public function deleteComment(int $id): void;
 }

@@ -40,9 +40,9 @@
             <div class="dropdown-menu">
                 @auth
                     <button class="dropdown-item" type="button">{{ auth()->user()->name }}</button>
-                    <a href="{{ route('user#detail', auth()->user()->id) }}" class="dropdown-item btn btn-info">Detail</a>
+                    <a href="{{ route('user#detail', auth()->user()->id) }}" class="dropdown-item btn btn-sm btn-info">Detail</a>
                     <a href="{{ route('user#changePassword')}}"
-                        class="dropdown-item btn btn-info">Change Password</a>
+                        class="dropdown-item btn btn-sm btn-info">Change Password</a>
                     <form method="POST" action="{{ route('user#signOut') }}">
                         @csrf
                         <button type="submit" class="dropdown-item" class="btn btn-info">Logout</button>
