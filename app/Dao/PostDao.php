@@ -59,7 +59,7 @@ class PostDao implements PostDaoInterface
      */
     public function getPostById(int $postId): object
     {
-        return Post::findOrFail($postId);
+         return Post::where('id',$postId)->first();
     }
 
     /**
@@ -83,8 +83,7 @@ class PostDao implements PostDaoInterface
     public function deletePost(int $postId): void
     {
         DB::transaction(function () use ($postId) {
-            Post::findOrFail($postId)->delete();
-            Comment::where('post_id', $postId)->delete();
+            Post::where('id',$postId)->delete();
         });
     }
 }

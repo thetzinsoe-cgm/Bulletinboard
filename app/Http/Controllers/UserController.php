@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Contracts\Services\UserServiceInterface;
@@ -69,17 +71,14 @@ class UserController extends Controller
         if ($user) {
             return redirect()->back()->with('error', 'This email is already in use!');
         } else {
-            $newUser = $this->userService->createUser($request->only([
+            $this->userService->createUser($request->only([
                 'email',
                 'password',
                 'name',
                 'image',
             ]));
-
-            // Log the user in after successful creation
-            Auth::login($newUser);
-
-            return redirect()->route('user#list'); // Or any desired route after login
+            Auth::attempt(request()->only('email', 'password'));
+            return redirect()->route('post#postList'); // Or any desired route after login
         }
     }
 
@@ -94,8 +93,8 @@ class UserController extends Controller
     public function detailUser(Request $request, $id)
     {
         $user = $this->userService->getUserById($id);
-        $postComment = $user->posts()->paginate(1);
-        return view('user.editUser', compact('user','postComment'));
+        $postComment = $this->userService->getPostCmByUserId($id);
+        return view('user.editUser', compact('user', 'postComment'));
     }
 
     /**

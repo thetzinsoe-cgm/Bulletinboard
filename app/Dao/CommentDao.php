@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\Dao\CommentDaoInterface;
+use App\Models\User;
 
 class CommentDao implements CommentDaoInterface
 {
@@ -17,11 +18,7 @@ class CommentDao implements CommentDaoInterface
      */
     public function getCommentByPost(int $postId): ?Object
     {
-        return DB::table('comments')
-            ->join('users', 'users.id', '=', 'comments.user_id')
-            ->select('comments.*', 'users.name')->where('comments.post_id', $postId)
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        return Post::with(['comments.users'])->where('id', $postId)->first();
     }
 
     /**
@@ -57,7 +54,7 @@ class CommentDao implements CommentDaoInterface
     public function updateComment(array $cmData, int $cmId): void
     {
         DB::transaction(function () use ($cmData, $cmId) {
-            Comment::find($cmId)->update($cmData);
+            Comment::where('id',$cmId)->update($cmData);
         });
     }
 
@@ -70,7 +67,7 @@ class CommentDao implements CommentDaoInterface
     public function deleteComment(int $cmId): void
     {
         DB::transaction(function () use ($cmId) {
-            Comment::findOrFail($cmId)->delete();
+            Comment::where('id',$cmId)->delete();
         });
     }
 }

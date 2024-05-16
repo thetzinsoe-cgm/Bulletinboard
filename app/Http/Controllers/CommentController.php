@@ -21,6 +21,7 @@ class CommentController extends Controller
     public function __construct(CommentService $commentService)
     {
         $this->commentService = $commentService;
+
     }
 
     /**
@@ -32,9 +33,7 @@ class CommentController extends Controller
     public function getComment($postId)
     {
         $comments = $this->commentService->getCommentByPost($postId);
-        $postService = new PostService(new PostDao());
-        $post = $postService->getPostById($postId);
-        return view('comment.comment', compact('comments', 'post'));
+        return view('comment.comment', compact('comments'));
     }
 
     /**
@@ -60,9 +59,7 @@ class CommentController extends Controller
     {
         $editComment = $this->commentService->getCommentById($commentId);
         $comments = $this->commentService->getCommentByPost($editComment->post_id);
-        $postService = new PostService(new PostDao());
-        $post = $postService->getPostById($editComment->post_id);
-        return view('comment.comment', compact('comments', 'post','editComment'));
+        return view('comment.comment', compact('comments','editComment'));
     }
 
     /**
@@ -89,7 +86,6 @@ class CommentController extends Controller
     {
         $comment = $this->commentService->getCommentById($commentId);
         $this->commentService->deleteComment($commentId);
-        $comments = $this->commentService->getCommentByPost($comment->post_id);
         return redirect()->route('post#comment',$comment->post_id)->with('success','Delete Successful');
     }
 }

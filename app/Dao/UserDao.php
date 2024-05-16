@@ -40,7 +40,7 @@ class UserDao implements UserDaoInterface
      */
     public function getUserById($id): object
     {
-        return User::findOrFail($id);
+        return User::find($id);
     }
 
     /**
@@ -51,7 +51,8 @@ class UserDao implements UserDaoInterface
      */
     public function getPostCmByUserId(int $id): object
     {
-        return User::with(['posts.comments.user'])->findOrFail($id);
+        //logger(User::with(['posts.comments.users'])->where('id', $id)->get());
+        return Post::with(['comments.users'])->where('created_by', $id)->paginate(1);
     }
 
     /**
@@ -75,10 +76,7 @@ class UserDao implements UserDaoInterface
     public function deleteUserById($id): void
     {
         DB::transaction(function () use ($id) {
-            $user = User::findOrFail($id);
-            Post::where('created_by', $id)->delete();
-            Comment::where('user_id', $id)->delete();
-            $user->delete();
+            User::where('id',$id)->delete();
         });
     }
 

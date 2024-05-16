@@ -17,15 +17,16 @@
             </div>
         @endif
         <div class="row">
+            @if (isset($comments))
             <div class="col-7">
                 <div style="height: 500px" class="p-3">
-                    <h4 style="height: 70px">{{ $post->title }}</h4>
-                    <p style="height:430px;overflow:scroll">{{ $post->description }}</p>
+                    <h4 style="height: 70px">{{ $comments->title }}</h4>
+                    <p style="height:430px;overflow:scroll">{{ $comments->description }}</p>
                 </div>
             </div>
-            @if (isset($comments) && $comments->count() > 0)
+
                 <div class="col-5 scrollbar my-3" style="height: 500px;overflow:scroll">
-                    @foreach ($comments as $comment)
+                    @foreach ($comments->comments as $comment)
                         @if ($comment->user_id == auth()->user()->id)
                             <a href="{{ route('post#editComment', $comment->id) }}"
                                 class="float-right border rounded rounded-circle px-2">
@@ -35,7 +36,7 @@
                         @endif
                         <div class="d-flex align-items-center">
                             <div><img src="{{ asset('img/default.png') }}" height="30px" alt=""></div>
-                            <div>{{ $comment->name }}</div>
+                            <div>{{ $comment->users->name }}</div>
                         </div>
 
                         <div style="margin-left:40px;padding:0">
@@ -68,7 +69,7 @@
                     </form>
                 </div>
             @else
-                <form action="{{ route('post#createComment', $post->id) }}" class="form d-flex col-12" method="POST">
+                <form action="{{ route('post#createComment', $comments->id) }}" class="form d-flex col-12" method="POST">
                     @csrf
                     <textarea class="form-control" name="comment" rows="2" placeholder="Enter Comment" required></textarea>
                     <input type="submit" value="Submit" class="btn btn-info">

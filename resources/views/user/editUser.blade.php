@@ -4,8 +4,9 @@
         <div class="card-body p-0">
             <a href="{{ route('post#postList') }}" class="m-5 btn btn-info">Back</a>
             <div class="row">
+                {{-- @dd($user->id) --}}
                 <div class="col-lg-5 text-center d-flex align-items-center justify-content-center mb-5">
-                    @if ($user->img)
+                    @if ( $user->img)
                         <img src="{{ asset('storage/images/' . $user->img) }} " height="300px" alt="">
                     @else
                         <img src="{{ asset('img/default.png') }} " height="300px" alt="">
@@ -35,7 +36,7 @@
                                     placeholder="Email Address">
                             </div>
 
-                            @if (Auth::user()->role == 1)
+                            @if (Auth::user()->role == config('constants.ADMIN_ROLE'))
                                 <div class="form-group">
                                     <select class="custom-select" name="role" id="inputGroupSelect01">
                                         <option selected disabled>Select Role</option>
@@ -73,7 +74,7 @@
                         <ul>
                             @foreach ($post->comments as $comment)
                                 <li>
-                                    <strong>{{ $comment->user->name }}</strong>: {{ $comment->comment }} -
+                                    <strong>{{ $comment->users->name }}</strong>: {{ $comment->comment }} -
                                     <small>{{ $comment->created_at }}</small>
                                 </li>
                             @endforeach

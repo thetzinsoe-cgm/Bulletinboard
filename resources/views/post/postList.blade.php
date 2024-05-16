@@ -1,7 +1,7 @@
 @extends('layout.master')
 @section('content')
     @if (Auth::check())
-        @if (Auth::user()->role == 1)
+        @if (Auth::user()->role == config('constants.ADMIN_ROLE'))
             <div class="position-fixed col-12">
                 <a href="{{ route('user#list') }}" class="btn btn-info float-right m-5">Show User List</a>
             </div>
