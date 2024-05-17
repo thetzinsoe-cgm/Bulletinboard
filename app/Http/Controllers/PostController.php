@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PostCreateRequest;
 use App\Contracts\Services\PostServiceInterface;
-use Illuminate\Http\Client\Request as ClientRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\postImportRequest;
 
 class PostController extends Controller
 {
@@ -126,16 +127,12 @@ class PostController extends Controller
     /**
      * Import CSV
      *
-     * @param Request $request
+     * @param postImportRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function importCSV(Request $request)
+    public function importCSV(postImportRequest $request)
     {
-        if (!$request->hasFile('file')) {
-            return redirect()->back()->with('error', 'No file uploaded.');
-        }
-        $file = $request->file('file');
-        $this->postService->importCSV($file);
-        return redirect()->back()->with('success', 'CSV file imported successfully.');
+        $this->postService->importCSV($request);
+        return redirect()->back()->with('success', config('message.upload_success'));
     }
 }

@@ -165,7 +165,7 @@ class UserController extends Controller
                     return redirect()->route('post#postList');
                 }
             }
-            return redirect()->back()->with('error', 'Email address or password is incorrect');
+            return redirect()->back()->with('error', config('message.password_not_match'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

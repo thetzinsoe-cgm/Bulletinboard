@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Contracts\Dao\PostDaoInterface;
@@ -119,19 +120,16 @@ class PostService implements PostServiceInterface
      *
      * @return void
      */
-    public function importCSV($file): void
+    public function importCSV($request): void
     {
-        $fileContents = file($file->getPathname());
-        foreach ($fileContents as $line) {
-            $data = str_getcsv($line);
-            $request = new PostCreateRequest();
-            $data = ['title'=> $data[0],'description'=> $data[1],'flag'=> $data[2]];
-            $validator = validator($data, $request->rules());
-            if ($validator->fails()) {
-                Log::warning('Validation failed for row: ' . implode(', ', $data));
-                continue;
+        DB::transaction(function () use ($request) {
+            foreach ($request->input('csv_data') as $index => $data) {
+                if ($request->errors()->has("csv_data.$index")) {
+                    Log::warning("Validation failed for row $index: " . implode(', ', $request->errors()->get("csv_data.$index")));
+                    continue;
+                }
+                $this->postDao->createPost($data);
             }
-            $this->createPost($data);
-        }
+        });
     }
 }

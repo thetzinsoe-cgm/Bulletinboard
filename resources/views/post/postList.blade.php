@@ -8,6 +8,14 @@
         @endif
     @endif
     <div class="card o-hidden border-0 shadow-sm my-5 col-8 m-auto p-0">
+        @error('file')
+            <div class="alert alert-danger alert-dismissible fade show position-fixed col-6" role="alert">
+                {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show position-fixed col-6" role="alert">
                 {{ session('success') }}
@@ -17,13 +25,13 @@
             </div>
         @endif
         @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show position-fixed col-6" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+            <div class="alert alert-danger alert-dismissible fade show position-fixed col-6" role="alert">
+                {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="card-header d-flex justify-content-between">
             <div class="">
                 <a href="{{ route('post#postList') }}" class="btn btn-info">All</a>
