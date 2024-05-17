@@ -124,11 +124,7 @@ class PostService implements PostServiceInterface
     {
         DB::transaction(function () use ($request) {
             foreach ($request->input('csv_data') as $index => $data) {
-                if ($request->errors()->has("csv_data.$index")) {
-                    Log::warning("Validation failed for row $index: " . implode(', ', $request->errors()->get("csv_data.$index")));
-                    continue;
-                }
-                $this->postDao->createPost($data);
+                $this->createPost($data);
             }
         });
     }

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class postImportRequest extends FormRequest
+class PostImportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -63,9 +63,9 @@ class postImportRequest extends FormRequest
         $validator->after(function ($validator) {
             $csvData = $this->input('csv_data');
             $rules = [
-                'title' => ['required', 'max:255'],
-                'description' => ['required'],
-                'flag' => ['required'],
+                'title' => ['required', 'string', 'min:3', 'max:255'],
+                'description' => ['required', 'string', 'min:10', 'max:500'],
+                'flag' => ['required', 'in:0,1,true,false'],
             ];
 
             foreach ($csvData as $index => $row) {

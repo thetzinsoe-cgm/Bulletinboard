@@ -8,14 +8,16 @@
         @endif
     @endif
     <div class="card o-hidden border-0 shadow-sm my-5 col-8 m-auto p-0">
-        @error('file')
+        @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show position-fixed col-6" role="alert">
-                {{ $message }}
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-        @enderror
+        @endif
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show position-fixed col-6" role="alert">
                 {{ session('success') }}
