@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Services\PostService;
 use App\Http\Requests\PostCreateRequest;
 use App\Contracts\Services\PostServiceInterface;
+use Illuminate\Http\Client\Request as ClientRequest;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -108,6 +108,34 @@ class PostController extends Controller
     public function deletePost(int $id)
     {
         $this->postService->deletePost($id);
-        return redirect()->route('post#postList');
+        return redirect()->route('post#showMyPost');
+    }
+
+    /**
+     * export CSV
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportCSV()
+    {
+        [$callback, $headers] = $this->postService->exportCSV();
+        return response()->stream($callback, 200, $headers);
+    }
+
+
+    /**
+     * Import CSV
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function importCSV(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'No file uploaded.');
+        }
+        $file = $request->file('file');
+        $this->postService->importCSV($file);
+        return redirect()->back()->with('success', 'CSV file imported successfully.');
     }
 }

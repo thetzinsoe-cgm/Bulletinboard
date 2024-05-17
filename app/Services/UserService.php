@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use App\Mail\SendPassMail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -152,9 +153,13 @@ class UserService implements UserServiceInterface
         $user = $this->userDao->findUserWithEmail($email);
         $newPass = Str::ascii(Str::random(6));
         if ($user) {
-            $user->password = Hash::make($newPass);
-            $this->userDao->updateUser($user->toArray(), $user->id);
-            Mail::to($email)->send(new SendPassMail(['name' => $user->name, 'newPassword' => $newPass]));
+            try {
+                $user->password = Hash::make($newPass);
+                $this->userDao->updateUser($user->toArray(), $user->id);
+                Mail::to($email)->send(new SendPassMail(['name' => $user->name, 'newPassword' => $newPass]));
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
         }
         return $user;
     }

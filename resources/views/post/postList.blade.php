@@ -8,12 +8,49 @@
         @endif
     @endif
     <div class="card o-hidden border-0 shadow-sm my-5 col-8 m-auto p-0">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show position-fixed col-6" role="alert">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show position-fixed col-6" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
         <div class="card-header d-flex justify-content-between">
             <div class="">
                 <a href="{{ route('post#postList') }}" class="btn btn-info">All</a>
                 <a href="{{ route('post#showMyPost') }}" class="btn btn-info">My Post</a>
             </div>
-            <div><a href="{{ route('post#create') }}" class="btn btn-info">+new</a></div>
+            <div class="justify-content-end">
+                @if (request()->routeIs('post#showMyPost'))
+                    <a href="{{ route('post#csvExport') }}" class="btn btn-info">Export
+                        <img src="{{ asset('fontawesome-free/svgs/solid/download.svg') }}" class="text-white" height="20px"
+                            alt="Export">
+                    </a>
+                @else
+                    <div class="d-inline align-items-center">
+                        <form action="{{ route('post#csvImport') }}" method="POST" class="d-inline"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" class="border form-control col-6 d-inline" name="file" accept=".csv">
+                            <button type="submit" class="btn btn-info">
+                                Import CSV
+                                <img src="{{ asset('fontawesome-free/svgs/solid/upload.svg') }}" class="text-white"
+                                    height="20px" alt="Export">
+                            </button>
+                        </form>
+                    </div>
+                @endif
+                <a href="{{ route('post#create') }}" class="btn btn-info">+new</a>
+            </div>
         </div>
         @if (isset($posts) && $posts->count() > 0)
             @foreach ($posts as $post)

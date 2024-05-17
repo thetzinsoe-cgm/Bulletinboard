@@ -5,6 +5,7 @@
             <div class="mt-3">
                 <a href="{{route('post#postList')}}" class="btn btn-info d-inline">Back</a>
             </div>
+
             <form action="{{ route('post#delete', $post->id) }}" method="POST" class="d-inline mt-3">
                 @csrf
                 <input type="submit" class="btn btn-danger" value = "Delete">

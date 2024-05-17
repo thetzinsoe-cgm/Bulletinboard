@@ -198,6 +198,10 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'The current password is incorrect.');
         }
 
+        if($request->input('passwordConfirmation') != $request->input('confirmPassword')){
+            return redirect()->back()->with('error','New password and Confirm password do not match!');
+        }
+
         $user['password'] = $request->input('passwordConfirmation');
         $this->userService->updateUser($user, $user['id']);
 

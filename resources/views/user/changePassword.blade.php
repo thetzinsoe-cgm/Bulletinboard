@@ -35,6 +35,12 @@
                                         placeholder="New Password" required>
                                 </div>
 
+                                <div class="form-group">
+                                    <input type="password" name="confirmPassword"
+                                        class="form-control form-control-user" id="exampleInputPassword"
+                                        placeholder="Confirm Password" required>
+                                </div>
+
                                 <input type="submit" class="btn btn-primary btn-user btn-block" value = "Change Password">
                             </form>
                             <hr>

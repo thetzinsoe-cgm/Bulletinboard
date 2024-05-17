@@ -18,13 +18,13 @@ Route::prefix('user')->group(function () {
         Route::post('/store', [UserController::class, 'storeUser'])->name('store#user');
         Route::get('/login', [UserController::class, 'loginUser'])->name('user#login');
         Route::post('/checkLogin', [UserController::class, 'checkLogin'])->name('user#checkLogin');
+        Route::get('/forgotPassword', [UserController::class, 'forgotPassword'])->name('user#forgotPassword');
+        Route::post('/sendPassword', [UserController::class, 'sendPassword'])->name('user#sendPassword');
     });
     Route::post('/logout', [UserController::class, 'signOut'])->name('user#signOut');
     Route::group(['middleware' => [IsLoggedIn::class]], function () {
         Route::get('/changePassword', [UserController::class, 'changePassword'])->name('user#changePassword');
         Route::post('/updatePassword', [UserController::class, 'updatePassword'])->name('user#updatePassword');
-        Route::get('/forgotPassword', [UserController::class, 'forgotPassword'])->name('user#forgotPassword');
-        Route::post('/sendPassword', [UserController::class, 'sendPassword'])->name('user#sendPassword');
         Route::group(['middleware' => [IsAdminOrIsAuthorize::class]], function () {
             Route::get('/list', [UserController::class, 'userList'])->name('user#list');
             Route::get('/detail/{id}', [UserController::class, 'detailUser'])->name('user#detail');
@@ -50,4 +50,7 @@ Route::prefix('post')->middleware(IsLoggedIn::class)->group(function () {
     Route::get('/comment/{id}/edit', [CommentController::class, 'editComment'])->name('post#editComment')->middleware(IsOwnComment::class);
     Route::patch('/comment/{id}/update', [CommentController::class, 'updateComment'])->name('post#updateComment')->middleware(IsOwnComment::class);
     Route::post('/comment/{id}', [CommentController::class, 'deleteComment'])->name('post#deleteComment');
+
+    Route::get('/csvExport', [PostController::class, 'exportCSV'])->name('post#csvExport');
+    Route::post('/csvExport', [PostController::class, 'importCSV'])->name('post#csvImport');
 });

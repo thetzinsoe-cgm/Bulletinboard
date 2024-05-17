@@ -63,7 +63,7 @@
 
         <hr>
 
-        @if (!empty($postComment) && $postComment->hasPages())
+        @if (!empty($postComment))
             @foreach ($postComment as $post)
                 <div class="mx-5">
                     <h2>{{ $post->title }}</h2>

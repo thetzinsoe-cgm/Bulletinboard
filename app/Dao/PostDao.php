@@ -4,9 +4,10 @@ namespace App\Dao;
 
 
 use App\Models\Post;
-use Illuminate\Support\Facades\DB;
-use App\Contracts\Dao\PostDaoInterface;
 use App\Models\Comment;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
+use App\Contracts\Dao\PostDaoInterface;
 
 class PostDao implements PostDaoInterface
 {
@@ -35,9 +36,13 @@ class PostDao implements PostDaoInterface
      * @param integer $userId
      * @return object
      */
-    public function getMypost(int $userId): object
+    public function getMypost(int $userId, bool $paginate = true): object
     {
-        return Post::where('created_by', $userId)->orderBy('updated_at', 'Desc')->paginate(2);
+        if ($paginate) {
+            return Post::where('created_by', $userId)->orderByDesc('updated_at')->paginate(2);
+        }else{
+            return Post::where('created_by', $userId)->orderByDesc('updated_at')->get();
+        }
     }
 
     /**
@@ -59,7 +64,7 @@ class PostDao implements PostDaoInterface
      */
     public function getPostById(int $postId): object
     {
-         return Post::where('id',$postId)->first();
+        return Post::where('id', $postId)->first();
     }
 
     /**
@@ -83,7 +88,7 @@ class PostDao implements PostDaoInterface
     public function deletePost(int $postId): void
     {
         DB::transaction(function () use ($postId) {
-            Post::where('id',$postId)->delete();
+            Post::where('id', $postId)->delete();
         });
     }
 }

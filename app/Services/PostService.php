@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Contracts\Dao\PostDaoInterface;
+use App\Http\Requests\PostCreateRequest;
 use App\Contracts\Services\PostServiceInterface;
 
 class PostService implements PostServiceInterface
@@ -83,5 +85,53 @@ class PostService implements PostServiceInterface
     public function deletePost(int $id): void
     {
         $this->postDao->deletePost($id);
+    }
+
+    /**
+     * Export CSV
+     *
+     * @return array
+     */
+    public function exportCSV(): array
+    {
+        $postData = $this->postDao->getMyPost(Auth::user()->id, false);
+        $csvFileName = 'post.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $csvFileName . '"',
+        ];
+
+        $callback = function () use ($postData) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['title', 'description', 'flag']);
+
+            foreach ($postData as $post) {
+                fputcsv($handle, [$post->title, $post->description, $post->flag]);
+            }
+
+            fclose($handle);
+        };
+        return [$callback, $headers];
+    }
+
+    /**
+     * Import CSV
+     *
+     * @return void
+     */
+    public function importCSV($file): void
+    {
+        $fileContents = file($file->getPathname());
+        foreach ($fileContents as $line) {
+            $data = str_getcsv($line);
+            $request = new PostCreateRequest();
+            $data = ['title'=> $data[0],'description'=> $data[1],'flag'=> $data[2]];
+            $validator = validator($data, $request->rules());
+            if ($validator->fails()) {
+                Log::warning('Validation failed for row: ' . implode(', ', $data));
+                continue;
+            }
+            $this->createPost($data);
+        }
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Contracts\Services;
 
+use App\Http\Requests\PostCreateRequest;
+
 interface PostServiceInterface
 {
      /**
@@ -44,4 +46,18 @@ interface PostServiceInterface
      * @return void
      */
     public function deletePost(int $id):void;
+
+    /**
+     * Export CSV
+     *
+     * @return array
+     */
+    public function exportCSV():array;
+
+    /**
+     * Import CSV
+     *
+     * @return void
+     */
+    public function importCSV($file):void;
 }
