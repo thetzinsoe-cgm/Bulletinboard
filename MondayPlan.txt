@@ -1,0 +1,31 @@
+slide 2-3-5-10 in update presentation file.
+
+
+
+
+
+
+1.https/lang/js/message.php //need to change text----l87 & l250
+
+        'contentfileupload_approve' => [
+            'success' => 'Content File Upload Approve Success.',
+        ],
+
+        'contentfileupload_reject' => [
+            'success' => 'Content File Upload Reject Success.',
+        ],
+
+ 	    'contentfileupload_approve' => 'Content File Upload Approve Mail Setting Completed.',
+
+            'contentfileupload_reject' => 'Content File Upload Reject Mail Setting Completed.',
+       
+
+
+
+2.contentfileupload/detail.blad.php need to add text -------l76
+                <tr>
+                    <td class="ql-tbl-left">承認機能設定</td>
+                    <td>{{ $contentfileupload->approval_flag == true ? 'TRUE' : 'FALSE' }}</td>
+                </tr>
+
+3.CpsMail -->mailmergefield for dedicated approve reject
